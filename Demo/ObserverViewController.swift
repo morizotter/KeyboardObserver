@@ -12,14 +12,14 @@ final class KeyboardObserverViewController: UIViewController {
 
     @IBOutlet weak var textView: UITextView!
     
-    let keyboardObserver = KeyboardObserver()
+    let keyboard = KeyboardObserver()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.title = "Observer"
         
-        keyboardObserver.observe { [weak self] (event) -> Void in
+        keyboard.observe { [weak self] (event) -> Void in
             guard let s = self else { return }
             switch event.type {
             case .WillShow, .WillHide, .WillChangeFrame:

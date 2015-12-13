@@ -8,7 +8,7 @@
 
 import UIKit
 
-public enum KeyboardEventType: String {
+public enum KeyboardEventType {
     case WillShow
     case DidShow
     case WillHide
@@ -71,8 +71,9 @@ public struct KeyboardEvent {
     public let curve: UIViewAnimationOptions
     public let duration: NSTimeInterval
     public var isLocal: Bool?
-    init?(name: String, userInfo: [NSObject: AnyObject]) {
-        guard let type = KeyboardEventType(name: name) else { return nil }
+    init?(notification: NSNotification) {
+        guard let userInfo = notification.userInfo else { return nil }
+        guard let type = KeyboardEventType(name: notification.name) else { return nil }
         self.type = type
         self.keyboardFrameBegin = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
         self.keyboardFrameEnd = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
@@ -121,8 +122,7 @@ public class KeyboardObserver {
 
 internal extension KeyboardObserver {
     @objc func notified(notification: NSNotification) {
-        guard let userInfo = notification.userInfo else { return }
-        guard let event = KeyboardEvent(name: notification.name, userInfo: userInfo) else { return }
+        guard let event = KeyboardEvent(notification: notification) else { return }
         
         switch event.type {
         case .WillShow:
