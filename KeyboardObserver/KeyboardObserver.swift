@@ -65,12 +65,12 @@ public enum KeyboardEventType: String {
 }
 
 public struct KeyboardEvent {
-    let type: KeyboardEventType
-    let keyboardFrameBegin: CGRect
-    let keyboardFrameEnd: CGRect
-    let curve: UIViewAnimationOptions
-    let duration: NSTimeInterval
-    var isLocal: Bool?
+    public let type: KeyboardEventType
+    public let keyboardFrameBegin: CGRect
+    public let keyboardFrameEnd: CGRect
+    public let curve: UIViewAnimationOptions
+    public let duration: NSTimeInterval
+    public var isLocal: Bool?
     init?(name: String, userInfo: [NSObject: AnyObject]) {
         guard let type = KeyboardEventType(name: name) else { return nil }
         self.type = type
@@ -84,7 +84,7 @@ public struct KeyboardEvent {
     }
 }
 
-enum KeyboardState {
+public enum KeyboardState {
     case Initial
     case Showing
     case Shown
@@ -107,7 +107,7 @@ public class KeyboardObserver {
         }
     }
     
-    init() {
+    public init() {
         KeyboardEventType.allEventNames().forEach {
             NSNotificationCenter.defaultCenter().addObserver(self, selector: "notified:", name: $0, object: nil)
         }
