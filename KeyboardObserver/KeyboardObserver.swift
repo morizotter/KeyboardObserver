@@ -99,7 +99,6 @@ public typealias KeyboardEventClosure = ((event: KeyboardEvent) -> Void)
 public class KeyboardObserver {
     var state = KeyboardState.Initial
     var eventClosures = [KeyboardEventClosure]()
-    var enabled = true
     
     deinit {
         eventClosures.removeAll()
@@ -115,7 +114,6 @@ public class KeyboardObserver {
     }
     
     public func observe(event: KeyboardEventClosure) {
-        if enabled == false { return }
         eventClosures.append(event)
     }
 }
