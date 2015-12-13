@@ -1,2 +1,151 @@
 # KeyboardEventObserver
 For not complicated keyboard event handling.
+
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+
+## Features
+
+- Less complicated keyboard event handling.
+- Do not use `NSNotification` , but `event` .
+
+## Difference
+
+**Witout KeyboardObserver.swift**
+
+```Swift
+let keyboardNotifications = [
+    UIKeyboardWillShowNotification,
+    UIKeyboardWillHideNotification,
+    UIKeyboardWillChangeFrameNotification
+]
+
+override func viewDidLoad() {
+    super.viewDidLoad()
+
+    navigationItem.title = "Notification"
+}
+
+override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+
+    keyboardNotifications.forEach {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardEventNotified:", name: $0, object: nil)
+    }
+}
+
+override func viewWillDisappear(animated: Bool) {
+    super.viewWillDisappear(animated)
+
+    keyboardNotifications.forEach {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: $0, object: nil)
+    }
+}
+
+func keyboardEventNotified(notification: NSNotification) {
+    guard let userInfo = notification.userInfo else { return }
+    let keyboardFrameEnd = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+    let curve = UIViewAnimationOptions(rawValue: UInt(userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber))
+    let duration = NSTimeInterval(userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber)
+    let distance = UIScreen.mainScreen().bounds.height - keyboardFrameEnd.origin.y
+    let bottom = distance >= bottomLayoutGuide.length ? distance : bottomLayoutGuide.length
+
+    UIView.animateWithDuration(duration, delay: 0.0, options: [curve], animations:
+        { [weak self] () -> Void in
+            self?.textView.contentInset.bottom = bottom
+            self?.textView.scrollIndicatorInsets.bottom = bottom
+        } , completion: nil)
+}
+```
+
+**With KeyboardObserver**
+
+```Swift
+let keyboard = KeyboardObserver()
+
+override func viewDidLoad() {
+    super.viewDidLoad()
+
+    navigationItem.title = "Observer"
+
+    keyboard.observe { [weak self] (event) -> Void in
+        guard let s = self else { return }
+        switch event.type {
+        case .WillShow, .WillHide, .WillChangeFrame:
+            let distance = UIScreen.mainScreen().bounds.height - event.keyboardFrameEnd.origin.y
+            let bottom = distance >= s.bottomLayoutGuide.length ? distance : s.bottomLayoutGuide.length
+
+            UIView.animateWithDuration(event.duration, delay: 0.0, options: [event.curve], animations:
+                { [weak self] () -> Void in
+                    self?.textView.contentInset.bottom = bottom
+                    self?.textView.scrollIndicatorInsets.bottom = bottom
+                } , completion: nil)
+        default:
+            break
+        }
+    }
+}
+```
+
+## How to use
+
+Create `KeyboardObserver` instance where you want, and the instance observes keyboard untill deinit.
+
+Call `observe(event: KeyboardEvent)` to observe keyboard events. `event` is converted keyboard notification object.
+
+```Swift
+public struct KeyboardEvent {
+    public let type: KeyboardEventType
+    public let keyboardFrameBegin: CGRect
+    public let keyboardFrameEnd: CGRect
+    public let curve: UIViewAnimationOptions
+    public let duration: NSTimeInterval
+    public var isLocal: Bool?
+    ...
+}
+```
+
+`event` has propertyes above. You don't have to convert `UINotification` 's userInfo to extract keyboard event values.
+
+`KeyboardEentType` has types same as keyboard's notification name. Like this below:
+
+```Swift
+public enum KeyboardEventType {
+    case WillShow
+    case DidShow
+    case WillHide
+    case DidHide
+    case WillChangeFrame
+    case DidChangeFrame
+    ...
+}
+```
+
+It has also `public var notificationName: String` which you can get original notification name.
+
+## Runtime Requirements
+
+- iOS8.0 or later
+- Xcode 7.0 - Swift2.0
+
+## Installation and Setup
+
+**Information:** To use KeyboardObserver with a project targeting lower than iOS 8.0, you must include the `KeyboardObserver.swift` source file directly in your project.
+
+### Installing with Carthage
+
+Just add to your Cartfile:
+
+```ogdl
+github "morizotter/KeyboardObserver"
+```
+
+### Manual Installation
+
+To install SwiftyDrop without a dependency manager, please add `KeyboardObserver.swift` to your Xcode Project.
+
+## Contributing
+
+Please file issues or submit pull requests for anything you’d like to see! We're waiting! :)
+
+## Licensing
+KeyboardObserver.swift is released under the MIT license. Go read the LICENSE file for more information.
