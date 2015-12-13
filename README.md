@@ -21,8 +21,6 @@ let keyboardNotifications = [
 
 override func viewDidLoad() {
     super.viewDidLoad()
-
-    navigationItem.title = "Notification"
 }
 
 override func viewWillAppear(animated: Bool) {
@@ -64,8 +62,6 @@ let keyboard = KeyboardObserver()
 
 override func viewDidLoad() {
     super.viewDidLoad()
-
-    navigationItem.title = "Observer"
 
     keyboard.observe { [weak self] (event) -> Void in
         guard let s = self else { return }
