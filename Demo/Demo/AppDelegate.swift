@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  Keyboard
+//  Demo
 //
 //  Created by MORITANAOKI on 2015/12/14.
 //  Copyright © 2015年 molabo. All rights reserved.
