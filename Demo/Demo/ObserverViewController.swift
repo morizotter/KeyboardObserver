@@ -35,13 +35,6 @@ final class KeyboardObserverViewController: UIViewController {
                 break
             }
         }
-        
-        NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "ti:", userInfo: nil, repeats: false)
-    }
-
-    func ti(timer: NSTimer) {
-        let viewControllers = tabBarController?.viewControllers
-        tabBarController?.viewControllers = [viewControllers![1]]
     }
 }
 
