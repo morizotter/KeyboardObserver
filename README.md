@@ -104,7 +104,7 @@ public struct KeyboardEvent {
 }
 ```
 
-`event` has propertyes above. You don't have to convert `UINotification` 's userInfo to extract keyboard event values.
+`event` has properties above. You don't have to convert `NSNotification` 's userInfo to extract keyboard event values.
 
 `KeyboardEentType` has types same as keyboard's notification name. Like this below:
 
