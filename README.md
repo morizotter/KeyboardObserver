@@ -1,5 +1,5 @@
-# KeyboardEventObserver
-For not complicated keyboard event handling.
+# KeyboardObserver.swift
+For less complicated keyboard event handling.
 
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
