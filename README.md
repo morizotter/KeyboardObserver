@@ -139,9 +139,9 @@ github "morizotter/KeyboardObserver"
 
 To install SwiftyDrop without a dependency manager, please add `KeyboardObserver.swift` to your Xcode Project.
 
-## Contributing
+## Contribution
 
 Please file issues or submit pull requests for anything you’d like to see! We're waiting! :)
 
-## Licensing
+## License
 KeyboardObserver.swift is released under the MIT license. Go read the LICENSE file for more information.
