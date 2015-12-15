@@ -97,8 +97,8 @@ public enum KeyboardState {
 public typealias KeyboardEventClosure = ((event: KeyboardEvent) -> Void)
 
 public class KeyboardObserver {
-    var state = KeyboardState.Initial
-    var enabled = true
+    public var state = KeyboardState.Initial
+    public var enabled = true
     private var eventClosures = [KeyboardEventClosure]()
     
     deinit {
