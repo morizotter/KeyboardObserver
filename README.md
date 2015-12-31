@@ -150,7 +150,7 @@ To integrate TouchVisualizer into your Xcode project using CocoaPods, specify it
 ```bash
 platform :ios, '8.0'
 use_frameworks!
-pod "KeyboardObserver", '~>1.0.0'
+pod "KeyboardObserver", '~>0.2.0'
 ```
 
 ### Manual Installation
