@@ -135,6 +135,24 @@ Just add to your Cartfile:
 github "morizotter/KeyboardObserver"
 ```
 
+###Installing with CocoaPods
+
+[CocoaPods](http://cocoapods.org) is a centralised dependency manager that automates the process of adding libraries to your Cocoa application. You can install it with the following command:
+
+```bash
+$ gem update
+$ gem install cocoapods
+$ pods --version
+```
+
+To integrate TouchVisualizer into your Xcode project using CocoaPods, specify it in your `Podfile` and run `pod install`.
+
+```bash
+platform :ios, '8.0'
+use_frameworks!
+pod "KeyboardObserver", '~>1.0.0'
+```
+
 ### Manual Installation
 
 To install SwiftyDrop without a dependency manager, please add `KeyboardObserver.swift` to your Xcode Project.
