@@ -115,7 +115,6 @@ public class KeyboardObserver {
     }
     
     public func observe(event: KeyboardEventClosure) {
-        if !enabled { return }
         eventClosures.append(event)
     }
 }
@@ -138,7 +137,8 @@ internal extension KeyboardObserver {
         case .DidChangeFrame:
             state = .Shown
         }
-        
+
+        if !enabled { return }
         eventClosures.forEach { $0(event: event) }
     }
 }
