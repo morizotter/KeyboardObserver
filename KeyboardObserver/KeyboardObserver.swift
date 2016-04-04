@@ -110,7 +110,7 @@ public class KeyboardObserver {
     
     public init() {
         KeyboardEventType.allEventNames().forEach {
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: "notified:", name: $0, object: nil)
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(notified(_:)), name: $0, object: nil)
         }
     }
     
