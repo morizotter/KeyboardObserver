@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "KeyboardObserver"
-  s.version      = "0.2.1"
+  s.version      = "0.3.0"
   s.summary      = "For less complicated keyboard event handling."
   s.description  = <<-DESC
                     - Less complicated keyboard event handling.
