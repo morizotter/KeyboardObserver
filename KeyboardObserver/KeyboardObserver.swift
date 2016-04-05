@@ -68,7 +68,7 @@ public struct KeyboardEvent {
     public let type: KeyboardEventType
     public let keyboardFrameBegin: CGRect
     public let keyboardFrameEnd: CGRect
-    public let curve: UIViewAnimationOptions
+    public let curve: UIViewAnimationCurve
     public let duration: NSTimeInterval
     public var isLocal: Bool?
     init?(notification: NSNotification) {
@@ -77,7 +77,7 @@ public struct KeyboardEvent {
         self.type = type
         self.keyboardFrameBegin = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
         self.keyboardFrameEnd = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
-        self.curve = UIViewAnimationOptions(rawValue: UInt(userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber))
+        self.curve = UIViewAnimationCurve(rawValue: Int(userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber))!
         self.duration = NSTimeInterval(userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber)
         if #available(iOS 9, *) {
             self.isLocal = Bool(userInfo[UIKeyboardIsLocalUserInfoKey] as! NSNumber)
