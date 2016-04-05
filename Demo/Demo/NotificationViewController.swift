@@ -28,7 +28,7 @@ class KeyboardNotificationViewController: UIViewController {
         super.viewWillAppear(animated)
         
         keyboardNotifications.forEach {
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardEventNotified:", name: $0, object: nil)
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardEventNotified(_:)), name: $0, object: nil)
         }
     }
     
