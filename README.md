@@ -42,16 +42,17 @@ override func viewWillDisappear(animated: Bool) {
 func keyboardEventNotified(notification: NSNotification) {
     guard let userInfo = notification.userInfo else { return }
     let keyboardFrameEnd = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
-    let curve = UIViewAnimationOptions(rawValue: UInt(userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber))
+    let curve = UIViewAnimationCurve(rawValue: Int(userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber))!
     let duration = NSTimeInterval(userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber)
     let distance = UIScreen.mainScreen().bounds.height - keyboardFrameEnd.origin.y
     let bottom = distance >= bottomLayoutGuide.length ? distance : bottomLayoutGuide.length
 
-    UIView.animateWithDuration(duration, delay: 0.0, options: [curve], animations:
-        { [weak self] () -> Void in
-            self?.textView.contentInset.bottom = bottom
-            self?.textView.scrollIndicatorInsets.bottom = bottom
-        } , completion: nil)
+    UIView.beginAnimations(nil, context: nil)
+    UIView.setAnimationDuration(duration)
+    UIView.setAnimationCurve(curve)
+    self.textView.contentInset.bottom = bottom
+    self.textView.scrollIndicatorInsets.bottom = bottom
+    UIView.commitAnimations()
 }
 ```
 
@@ -70,11 +71,12 @@ override func viewDidLoad() {
             let distance = UIScreen.mainScreen().bounds.height - event.keyboardFrameEnd.origin.y
             let bottom = distance >= s.bottomLayoutGuide.length ? distance : s.bottomLayoutGuide.length
 
-            UIView.animateWithDuration(event.duration, delay: 0.0, options: [event.curve], animations:
-                { [weak self] () -> Void in
-                    self?.textView.contentInset.bottom = bottom
-                    self?.textView.scrollIndicatorInsets.bottom = bottom
-                } , completion: nil)
+            UIView.beginAnimations(nil, context: nil)
+            UIView.setAnimationDuration(event.duration)
+            UIView.setAnimationCurve(event.curve)
+            self.textView.contentInset.bottom = bottom
+            self.textView.scrollIndicatorInsets.bottom = bottom
+            UIView.commitAnimations()
         default:
             break
         }
@@ -93,7 +95,7 @@ public struct KeyboardEvent {
     public let type: KeyboardEventType
     public let keyboardFrameBegin: CGRect
     public let keyboardFrameEnd: CGRect
-    public let curve: UIViewAnimationOptions
+    public let curve: UIViewAnimationCurve
     public let duration: NSTimeInterval
     public var isLocal: Bool?
     ...
