@@ -68,19 +68,35 @@ public struct KeyboardEvent {
     public let type: KeyboardEventType
     public let keyboardFrameBegin: CGRect
     public let keyboardFrameEnd: CGRect
-    public let curve: UIViewAnimationOptions
+    public let curve: UIViewAnimationCurve
     public let duration: NSTimeInterval
     public var isLocal: Bool?
+    
+    public var options: UIViewAnimationOptions {
+        return UIViewAnimationOptions(rawValue: UInt(curve.rawValue << 16))
+    }
+    
     init?(notification: NSNotification) {
         guard let userInfo = notification.userInfo else { return nil }
         guard let type = KeyboardEventType(name: notification.name) else { return nil }
+        guard let begin = (userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() else { return nil }
+        guard let end = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() else { return nil }
+        guard
+            let curveInt = (userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber)?.integerValue,
+            let curve = UIViewAnimationCurve(rawValue: curveInt)
+            else { return nil }
+        guard
+            let durationDouble = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue
+            else { return nil }
+        
         self.type = type
-        self.keyboardFrameBegin = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
-        self.keyboardFrameEnd = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
-        self.curve = UIViewAnimationOptions(rawValue: UInt(userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber))
-        self.duration = NSTimeInterval(userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber)
+        self.keyboardFrameBegin = begin
+        self.keyboardFrameEnd = end
+        self.curve = curve
+        self.duration = NSTimeInterval(durationDouble)
         if #available(iOS 9, *) {
-            self.isLocal = Bool(userInfo[UIKeyboardIsLocalUserInfoKey] as! NSNumber)
+            guard let isLocalInt = (userInfo[UIKeyboardIsLocalUserInfoKey] as? NSNumber)?.integerValue else { return nil }
+            self.isLocal = Bool(isLocalInt)
         }
     }
 }
