@@ -43,12 +43,13 @@ class KeyboardNotificationViewController: UIViewController {
     func keyboardEventNotified(notification: NSNotification) {
         guard let userInfo = notification.userInfo else { return }
         let keyboardFrameEnd = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
-        let curve = UIViewAnimationOptions(rawValue: UInt(userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber))
+        let curve = UIViewAnimationCurve(rawValue: (userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).integerValue)!
+        let options = UIViewAnimationOptions(rawValue: UInt(curve.rawValue << 16))
         let duration = NSTimeInterval(userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber)
         let distance = UIScreen.mainScreen().bounds.height - keyboardFrameEnd.origin.y
         let bottom = distance >= bottomLayoutGuide.length ? distance : bottomLayoutGuide.length
         
-        UIView.animateWithDuration(duration, delay: 0.0, options: [curve], animations:
+        UIView.animateWithDuration(duration, delay: 0.0, options: [options], animations:
             { [weak self] () -> Void in
                 self?.textView.contentInset.bottom = bottom
                 self?.textView.scrollIndicatorInsets.bottom = bottom

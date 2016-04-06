@@ -42,7 +42,8 @@ override func viewWillDisappear(animated: Bool) {
 func keyboardEventNotified(notification: NSNotification) {
     guard let userInfo = notification.userInfo else { return }
     let keyboardFrameEnd = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
-    let options = UIViewAnimationOptions(rawValue: UInt(userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber))
+    let curve = UIViewAnimationCurve(rawValue: (userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).integerValue)!
+    let options = UIViewAnimationOptions(rawValue: UInt(curve.rawValue << 16))
     let duration = NSTimeInterval(userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber)
     let distance = UIScreen.mainScreen().bounds.height - keyboardFrameEnd.origin.y
     let bottom = distance >= bottomLayoutGuide.length ? distance : bottomLayoutGuide.length
