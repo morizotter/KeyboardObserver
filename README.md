@@ -70,7 +70,7 @@ override func viewDidLoad() {
             let distance = UIScreen.mainScreen().bounds.height - event.keyboardFrameEnd.origin.y
             let bottom = distance >= s.bottomLayoutGuide.length ? distance : s.bottomLayoutGuide.length
 
-            UIView.animateWithDuration(event.duration, delay: 0.0, options: [event.curve], animations:
+            UIView.animateWithDuration(event.duration, delay: 0.0, options: [event.options], animations:
                 { [weak self] () -> Void in
                     self?.textView.contentInset.bottom = bottom
                     self?.textView.scrollIndicatorInsets.bottom = bottom
@@ -88,16 +88,19 @@ Create `KeyboardObserver` instance where you want, and the instance observes key
 
 Call `observe(event: KeyboardEvent)` to observe keyboard events. `event` is converted keyboard notification object.
 
-```Swift
+```swift
 public struct KeyboardEvent {
     public let type: KeyboardEventType
     public let keyboardFrameBegin: CGRect
     public let keyboardFrameEnd: CGRect
-    public let curve: UIViewAnimationOptions
+    public let curve: UIViewAnimationCurve
     public let duration: NSTimeInterval
     public var isLocal: Bool?
+
+    public var options: UIViewAnimationOptions {
+        return UIViewAnimationOptions(rawValue: UInt(curve.rawValue << 16))
+    }
     ...
-}
 ```
 
 `event` has properties above. You don't have to convert `NSNotification` 's userInfo to extract keyboard event values.
@@ -150,7 +153,7 @@ To integrate TouchVisualizer into your Xcode project using CocoaPods, specify it
 ```bash
 platform :ios, '8.0'
 use_frameworks!
-pod "KeyboardObserver", '~>0.3.0'
+pod "KeyboardObserver", '~>0.4.0'
 ```
 
 ### Manual Installation
