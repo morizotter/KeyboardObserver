@@ -10,7 +10,7 @@ For less complicated keyboard event handling.
 
 ## Difference
 
-**Witout KeyboardObserver.swift**
+**Without KeyboardObserver.swift**
 
 ```Swift
 let keyboardNotifications = [
@@ -149,7 +149,7 @@ $ gem install cocoapods
 $ pods --version
 ```
 
-To integrate TouchVisualizer into your Xcode project using CocoaPods, specify it in your `Podfile` and run `pod install`.
+To integrate KeyboardObserver into your Xcode project using CocoaPods, specify it in your `Podfile` and run `pod install`.
 
 ```bash
 platform :ios, '8.0'
@@ -159,7 +159,7 @@ pod "KeyboardObserver", '~>0.4.0'
 
 ### Manual Installation
 
-To install SwiftyDrop without a dependency manager, please add `KeyboardObserver.swift` to your Xcode Project.
+To install KeyboardObserver without a dependency manager, please add `KeyboardObserver.swift` to your Xcode Project.
 
 ## Contribution
 
