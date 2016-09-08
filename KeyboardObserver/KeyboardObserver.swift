@@ -16,20 +16,20 @@ public enum KeyboardEventType {
     case willChangeFrame
     case didChangeFrame
     
-    public var notificationName: String {
+    public var notificationName: NSNotification.Name {
         switch self {
         case .willShow:
-            return NSNotification.Name.UIKeyboardWillShow.rawValue
+            return .UIKeyboardWillShow
         case .didShow:
-            return NSNotification.Name.UIKeyboardDidShow.rawValue
+            return .UIKeyboardDidShow
         case .willHide:
-            return NSNotification.Name.UIKeyboardWillHide.rawValue
+            return .UIKeyboardWillHide
         case .didHide:
-            return NSNotification.Name.UIKeyboardDidHide.rawValue
+            return .UIKeyboardDidHide
         case .willChangeFrame:
-            return NSNotification.Name.UIKeyboardWillChangeFrame.rawValue
+            return .UIKeyboardWillChangeFrame
         case .didChangeFrame:
-            return NSNotification.Name.UIKeyboardDidChangeFrame.rawValue
+            return .UIKeyboardDidChangeFrame
         }
     }
     
@@ -52,7 +52,7 @@ public enum KeyboardEventType {
         }
     }
     
-    static func allEventNames() -> [String] {
+    static func allEventNames() -> [NSNotification.Name] {
         return [
             KeyboardEventType.willShow,
             KeyboardEventType.didShow,
@@ -120,13 +120,13 @@ open class KeyboardObserver {
     deinit {
         eventClosures.removeAll()
         KeyboardEventType.allEventNames().forEach {
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: $0), object: nil)
+            NotificationCenter.default.removeObserver(self, name: $0, object: nil)
         }
     }
     
     public init() {
         KeyboardEventType.allEventNames().forEach {
-            NotificationCenter.default.addObserver(self, selector: #selector(notified(_:)), name: NSNotification.Name(rawValue: $0), object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(notified(_:)), name: $0, object: nil)
         }
     }
     
