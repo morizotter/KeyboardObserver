@@ -99,6 +99,7 @@
 				TargetAttributes = {
 					90F10A281C1DF4BE00D59B96 = {
 						CreatedOnToolsVersion = 7.2;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -240,6 +241,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = molabo.KeyboardObserver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -260,6 +262,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = molabo.KeyboardObserver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
