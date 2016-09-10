@@ -22,15 +22,14 @@ final class KeyboardObserverViewController: UIViewController {
         keyboard.observe { [weak self] (event) -> Void in
             guard let s = self else { return }
             switch event.type {
-            case .WillShow, .WillHide, .WillChangeFrame:
-                let distance = UIScreen.mainScreen().bounds.height - event.keyboardFrameEnd.origin.y
+            case .willShow, .willHide, .willChangeFrame:
+                let distance = UIScreen.main.bounds.height - event.keyboardFrameEnd.origin.y
                 let bottom = distance >= s.bottomLayoutGuide.length ? distance : s.bottomLayoutGuide.length
                 
-                UIView.animateWithDuration(event.duration, delay: 0.0, options: [event.options], animations:
-                    { [weak self] () -> Void in
-                        self?.textView.contentInset.bottom = bottom
-                        self?.textView.scrollIndicatorInsets.bottom = bottom
-                    } , completion: nil)
+                UIView.animate(withDuration: event.duration, delay: 0.0, options: [event.options], animations: { [weak self] () -> Void in
+                    self?.textView.contentInset.bottom = bottom
+                    self?.textView.scrollIndicatorInsets.bottom = bottom
+                    }, completion: nil)
             default:
                 break
             }

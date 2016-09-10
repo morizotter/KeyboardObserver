@@ -9,57 +9,57 @@
 import UIKit
 
 public enum KeyboardEventType {
-    case WillShow
-    case DidShow
-    case WillHide
-    case DidHide
-    case WillChangeFrame
-    case DidChangeFrame
+    case willShow
+    case didShow
+    case willHide
+    case didHide
+    case willChangeFrame
+    case didChangeFrame
     
-    public var notificationName: String {
+    public var notificationName: NSNotification.Name {
         switch self {
-        case .WillShow:
-            return UIKeyboardWillShowNotification
-        case .DidShow:
-            return UIKeyboardDidShowNotification
-        case .WillHide:
-            return UIKeyboardWillHideNotification
-        case .DidHide:
-            return UIKeyboardDidHideNotification
-        case .WillChangeFrame:
-            return UIKeyboardWillChangeFrameNotification
-        case .DidChangeFrame:
-            return UIKeyboardDidChangeFrameNotification
+        case .willShow:
+            return .UIKeyboardWillShow
+        case .didShow:
+            return .UIKeyboardDidShow
+        case .willHide:
+            return .UIKeyboardWillHide
+        case .didHide:
+            return .UIKeyboardDidHide
+        case .willChangeFrame:
+            return .UIKeyboardWillChangeFrame
+        case .didChangeFrame:
+            return .UIKeyboardDidChangeFrame
         }
     }
     
-    init?(name: String) {
+    init?(name: NSNotification.Name) {
         switch name {
-        case UIKeyboardWillShowNotification:
-            self = .WillShow
-        case UIKeyboardDidShowNotification:
-            self = .DidShow
-        case UIKeyboardWillHideNotification:
-            self = .WillHide
-        case UIKeyboardDidHideNotification:
-            self = .DidHide
-        case UIKeyboardWillChangeFrameNotification:
-            self = .WillChangeFrame
-        case UIKeyboardDidChangeFrameNotification:
-            self = .DidChangeFrame
+        case NSNotification.Name.UIKeyboardWillShow:
+            self = .willShow
+        case NSNotification.Name.UIKeyboardDidShow:
+            self = .didShow
+        case NSNotification.Name.UIKeyboardWillHide:
+            self = .willHide
+        case NSNotification.Name.UIKeyboardDidHide:
+            self = .didHide
+        case NSNotification.Name.UIKeyboardWillChangeFrame:
+            self = .willChangeFrame
+        case NSNotification.Name.UIKeyboardDidChangeFrame:
+            self = .didChangeFrame
         default:
             return nil
         }
     }
     
-    static func allEventNames() -> [String] {
+    static func allEventNames() -> [NSNotification.Name] {
         return [
-            KeyboardEventType.WillShow,
-            KeyboardEventType.DidShow,
-            KeyboardEventType.WillHide,
-            KeyboardEventType.DidHide,
-            KeyboardEventType.WillChangeFrame,
-            KeyboardEventType.DidChangeFrame
+            KeyboardEventType.willShow,
+            KeyboardEventType.didShow,
+            KeyboardEventType.willHide,
+            KeyboardEventType.didHide,
+            KeyboardEventType.willChangeFrame,
+            KeyboardEventType.didChangeFrame
         ].map { $0.notificationName }
     }
 }
@@ -69,20 +69,20 @@ public struct KeyboardEvent {
     public let keyboardFrameBegin: CGRect
     public let keyboardFrameEnd: CGRect
     public let curve: UIViewAnimationCurve
-    public let duration: NSTimeInterval
+    public let duration: TimeInterval
     public var isLocal: Bool?
     
     public var options: UIViewAnimationOptions {
         return UIViewAnimationOptions(rawValue: UInt(curve.rawValue << 16))
     }
     
-    init?(notification: NSNotification) {
-        guard let userInfo = notification.userInfo else { return nil }
+    init?(notification: Notification) {
+        guard let userInfo = (notification as NSNotification).userInfo else { return nil }
         guard let type = KeyboardEventType(name: notification.name) else { return nil }
-        guard let begin = (userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() else { return nil }
-        guard let end = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue() else { return nil }
+        guard let begin = (userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue else { return nil }
+        guard let end = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return nil }
         guard
-            let curveInt = (userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber)?.integerValue,
+            let curveInt = (userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue,
             let curve = UIViewAnimationCurve(rawValue: curveInt)
             else { return nil }
         guard
@@ -93,68 +93,68 @@ public struct KeyboardEvent {
         self.keyboardFrameBegin = begin
         self.keyboardFrameEnd = end
         self.curve = curve
-        self.duration = NSTimeInterval(durationDouble)
+        self.duration = TimeInterval(durationDouble)
         if #available(iOS 9, *) {
-            guard let isLocalInt = (userInfo[UIKeyboardIsLocalUserInfoKey] as? NSNumber)?.integerValue else { return nil }
-            self.isLocal = Bool(isLocalInt)
+            guard let isLocalInt = (userInfo[UIKeyboardIsLocalUserInfoKey] as? NSNumber)?.intValue else { return nil }
+            self.isLocal = isLocalInt == 1
         }
     }
 }
 
 public enum KeyboardState {
-    case Initial
-    case Showing
-    case Shown
-    case Hiding
-    case Hidden
-    case Changing
+    case initial
+    case showing
+    case shown
+    case hiding
+    case hidden
+    case changing
 }
 
-public typealias KeyboardEventClosure = ((event: KeyboardEvent) -> Void)
+public typealias KeyboardEventClosure = ((_ event: KeyboardEvent) -> Void)
 
-public class KeyboardObserver {
-    public var state = KeyboardState.Initial
-    public var enabled = true
-    private var eventClosures = [KeyboardEventClosure]()
+open class KeyboardObserver {
+    open var state = KeyboardState.initial
+    open var enabled = true
+    fileprivate var eventClosures = [KeyboardEventClosure]()
     
     deinit {
         eventClosures.removeAll()
         KeyboardEventType.allEventNames().forEach {
-            NSNotificationCenter.defaultCenter().removeObserver(self, name: $0, object: nil)
+            NotificationCenter.default.removeObserver(self, name: $0, object: nil)
         }
     }
     
     public init() {
         KeyboardEventType.allEventNames().forEach {
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(notified(_:)), name: $0, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(notified(_:)), name: $0, object: nil)
         }
     }
     
-    public func observe(event: KeyboardEventClosure) {
+    open func observe(_ event: @escaping KeyboardEventClosure) {
         eventClosures.append(event)
     }
 }
 
 internal extension KeyboardObserver {
-    @objc func notified(notification: NSNotification) {
+    @objc func notified(_ notification: Notification) {
         guard let event = KeyboardEvent(notification: notification) else { return }
         
         switch event.type {
-        case .WillShow:
-            state = .Showing
-        case .DidShow:
-            state = .Shown
-        case .WillHide:
-            state = .Hiding
-        case .DidHide:
-            state = .Hidden
-        case .WillChangeFrame:
-            state = .Changing
-        case .DidChangeFrame:
-            state = .Shown
+        case .willShow:
+            state = .showing
+        case .didShow:
+            state = .shown
+        case .willHide:
+            state = .hiding
+        case .didHide:
+            state = .hidden
+        case .willChangeFrame:
+            state = .changing
+        case .didChangeFrame:
+            state = .shown
         }
 
         if !enabled { return }
-        eventClosures.forEach { $0(event: event) }
+        eventClosures.forEach { $0(event) }
     }
 }
