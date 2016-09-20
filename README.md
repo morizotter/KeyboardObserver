@@ -125,7 +125,8 @@ It has also `public var notificationName: String` which you can get original not
 ## Runtime Requirements
 
 - iOS8.0 or later
-- Xcode 7.3 - Swift2.2
+- Xcode 8.0
+- Swift2.3
 
 ## Installation and Setup
 
@@ -154,7 +155,7 @@ To integrate KeyboardObserver into your Xcode project using CocoaPods, specify i
 ```bash
 platform :ios, '8.0'
 use_frameworks!
-pod "KeyboardObserver", '~>0.4.0'
+pod "KeyboardObserver", '~>0.5.0'
 ```
 
 ### Manual Installation
