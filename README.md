@@ -49,7 +49,7 @@ func keyboardEventNotified(notification: NSNotification) {
     let bottom = distance >= bottomLayoutGuide.length ? distance : bottomLayoutGuide.length
 
     UIView.animateWithDuration(duration, delay: 0.0, options: [options], animations:
-        { [weak self] () -> Void in
+        { () -> Void in
             self?.textView.contentInset.bottom = bottom
             self?.textView.scrollIndicatorInsets.bottom = bottom
         } , completion: nil)
@@ -72,7 +72,7 @@ override func viewDidLoad() {
             let bottom = distance >= s.bottomLayoutGuide.length ? distance : s.bottomLayoutGuide.length
 
             UIView.animateWithDuration(event.duration, delay: 0.0, options: [event.options], animations:
-                { [weak self] () -> Void in
+                { () -> Void in
                     self?.textView.contentInset.bottom = bottom
                     self?.textView.scrollIndicatorInsets.bottom = bottom
                 } , completion: nil)
