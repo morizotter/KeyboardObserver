@@ -51,9 +51,9 @@ class KeyboardNotificationViewController: UIViewController {
         let bottom = distance >= bottomLayoutGuide.length ? distance : bottomLayoutGuide.length
         
         UIView.animate(withDuration: duration, delay: 0.0, options: [options], animations:
-            { [weak self] () -> Void in
-                self?.textView.contentInset.bottom = bottom
-                self?.textView.scrollIndicatorInsets.bottom = bottom
+            { () -> Void in
+                self.textView.contentInset.bottom = bottom
+                self.textView.scrollIndicatorInsets.bottom = bottom
             } , completion: nil)
     }
 }
