@@ -26,9 +26,9 @@ final class KeyboardObserverViewController: UIViewController {
                 let distance = UIScreen.main.bounds.height - event.keyboardFrameEnd.origin.y
                 let bottom = distance >= s.bottomLayoutGuide.length ? distance : s.bottomLayoutGuide.length
                 
-                UIView.animate(withDuration: event.duration, delay: 0.0, options: [event.options], animations: { [weak self] () -> Void in
-                    self?.textView.contentInset.bottom = bottom
-                    self?.textView.scrollIndicatorInsets.bottom = bottom
+                UIView.animate(withDuration: event.duration, delay: 0.0, options: [event.options], animations: { () -> Void in
+                    s.textView.contentInset.bottom = bottom
+                    s.textView.scrollIndicatorInsets.bottom = bottom
                     }, completion: nil)
             default:
                 break
