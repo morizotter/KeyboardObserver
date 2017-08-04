@@ -6,17 +6,17 @@ For less complicated keyboard event handling.
 ## Features
 
 - Less complicated keyboard event handling.
-- Do not use `NSNotification` , but `event` .
+- Do not use `Notification` , but `event` .
 
 ## Difference
 
 **Without KeyboardObserver.swift**
 
 ```Swift
-let keyboardNotifications = [
-    UIKeyboardWillShowNotification,
-    UIKeyboardWillHideNotification,
-    UIKeyboardWillChangeFrameNotification
+let keyboardNotifications: [Notification.Name] = [
+    .UIKeyboardWillShow,
+    .UIKeyboardWillHide,
+    .UIKeyboardWillChangeFrame,
 ]
 
 override func viewDidLoad() {
@@ -27,7 +27,7 @@ override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
 
     keyboardNotifications.forEach {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardEventNotified:", name: $0, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardEventNotified:), name: $0, object: nil)
     }
 }
 
@@ -35,17 +35,17 @@ override func viewWillDisappear(animated: Bool) {
     super.viewWillDisappear(animated)
 
     keyboardNotifications.forEach {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: $0, object: nil)
+        NotificationCenter.default.removeObserver(self, name: $0, object: nil)
     }
 }
 
-func keyboardEventNotified(notification: NSNotification) {
+func keyboardEventNotified(notification: Notification) {
     guard let userInfo = notification.userInfo else { return }
-    let keyboardFrameEnd = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+    let keyboardFrameEnd = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
     let curve = UIViewAnimationCurve(rawValue: (userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).integerValue)!
     let options = UIViewAnimationOptions(rawValue: UInt(curve.rawValue << 16))
-    let duration = NSTimeInterval(userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber)
-    let distance = UIScreen.mainScreen().bounds.height - keyboardFrameEnd.origin.y
+    let duration = TimeInterval((userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue)
+    let distance = UIScreen.main.bounds.height - keyboardFrameEnd.origin.y
     let bottom = distance >= bottomLayoutGuide.length ? distance : bottomLayoutGuide.length
 
     UIView.animateWithDuration(duration, delay: 0.0, options: [options], animations:
@@ -67,8 +67,8 @@ override func viewDidLoad() {
     keyboard.observe { [weak self] (event) -> Void in
         guard let s = self else { return }
         switch event.type {
-        case .WillShow, .WillHide, .WillChangeFrame:
-            let distance = UIScreen.mainScreen().bounds.height - event.keyboardFrameEnd.origin.y
+        case .willShow, .willHide, .willChangeFrame:
+            let distance = UIScreen.main.bounds.height - event.keyboardFrameEnd.origin.y
             let bottom = distance >= s.bottomLayoutGuide.length ? distance : s.bottomLayoutGuide.length
 
             UIView.animateWithDuration(event.duration, delay: 0.0, options: [event.options], animations:
@@ -104,18 +104,18 @@ public struct KeyboardEvent {
     ...
 ```
 
-`event` has properties above. You don't have to convert `NSNotification` 's userInfo to extract keyboard event values.
+`event` has properties above. You don't have to convert `Notification` 's userInfo to extract keyboard event values.
 
 `KeyboardEentType` has types same as keyboard's notification name. Like this below:
 
 ```Swift
 public enum KeyboardEventType {
-    case WillShow
-    case DidShow
-    case WillHide
-    case DidHide
-    case WillChangeFrame
-    case DidChangeFrame
+    case willShow
+    case didShow
+    case willHide
+    case didHide
+    case willChangeFrame
+    case didChangeFrame
     ...
 }
 ```
@@ -124,7 +124,7 @@ It has also `public var notificationName: String` which you can get original not
 
 ## Runtime Requirements
 
-- iOS8.0 or later
+- iOS 8.0 or later
 - Xcode 8.0 - Swift3
 
 ## Installation and Setup
@@ -139,7 +139,7 @@ Just add to your Cartfile:
 github "morizotter/KeyboardObserver"
 ```
 
-###Installing with CocoaPods
+### Installing with CocoaPods
 
 [CocoaPods](http://cocoapods.org) is a centralised dependency manager that automates the process of adding libraries to your Cocoa application. You can install it with the following command:
 
