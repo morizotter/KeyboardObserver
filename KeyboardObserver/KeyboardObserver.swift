@@ -114,7 +114,7 @@ public typealias KeyboardEventClosure = ((_ event: KeyboardEvent) -> Void)
 
 open class KeyboardObserver {
     open var state = KeyboardState.initial
-    open var enabled = true
+    open var isEnabled = true
     fileprivate var eventClosures = [KeyboardEventClosure]()
     
     deinit {
@@ -154,7 +154,7 @@ internal extension KeyboardObserver {
             state = .shown
         }
 
-        if !enabled { return }
+        if !isEnabled { return }
         eventClosures.forEach { $0(event) }
     }
 }
