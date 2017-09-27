@@ -125,7 +125,7 @@ It has also `public var notificationName: String` which you can get original not
 ## Runtime Requirements
 
 - iOS 8.0 or later
-- Xcode 8.0 - Swift3
+- Xcode 9.0 - Swift4
 
 ## Installation and Setup
 
