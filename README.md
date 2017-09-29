@@ -48,8 +48,8 @@ func keyboardEventNotified(notification: Notification) {
     let distance = UIScreen.main.bounds.height - keyboardFrameEnd.origin.y
     let bottom = distance >= bottomLayoutGuide.length ? distance : bottomLayoutGuide.length
 
-    UIView.animateWithDuration(duration, delay: 0.0, options: [options], animations:
-        { () -> Void in
+    UIView.animate(withDuration: event.duration, delay: 0.0, options: [event.options], animations:
+         { () -> Void in
             self?.textView.contentInset.bottom = bottom
             self?.textView.scrollIndicatorInsets.bottom = bottom
         } , completion: nil)
