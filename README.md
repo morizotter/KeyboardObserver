@@ -67,7 +67,6 @@ override func viewDidLoad() {
         guard let self = self else { return }
         switch event.type {
         case .willShow, .willHide, .willChangeFrame:
-            print("Fire: \(event.type)")
             let keyboardFrameEnd = event.keyboardFrameEnd
             let bottom = keyboardFrameEnd.height - self.bottomLayoutGuide.length
             
