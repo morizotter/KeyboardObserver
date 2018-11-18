@@ -18,16 +18,16 @@ final class KeyboardObserverViewController: UIViewController {
         super.viewDidLoad()
         
         keyboard.observe { [weak self] (event) -> Void in
-            guard let s = self else { return }
+            guard let self = self else { return }
             switch event.type {
             case .willShow, .willHide, .willChangeFrame:
                 print("Fire: \(event.type)")
-                let distance = UIScreen.main.bounds.height - event.keyboardFrameEnd.origin.y
-                let bottom = distance >= s.bottomLayoutGuide.length ? distance : s.bottomLayoutGuide.length
+                let keyboardFrameEnd = event.keyboardFrameEnd
+                let bottom = keyboardFrameEnd.height - self.bottomLayoutGuide.length
                 
                 UIView.animate(withDuration: event.duration, delay: 0.0, options: [event.options], animations: { () -> Void in
-                    s.textView.contentInset.bottom = bottom
-                    s.textView.scrollIndicatorInsets.bottom = bottom
+                    self.textView.contentInset.bottom = bottom
+                    self.textView.scrollIndicatorInsets.bottom = bottom
                     }, completion: nil)
             default:
                 break

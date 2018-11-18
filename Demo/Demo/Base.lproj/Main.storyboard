@@ -29,7 +29,6 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="EXo-kP-bhN" secondAttribute="bottom" id="Rb3-kR-pAq"/>
                             <constraint firstItem="EXo-kP-bhN" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Vtf-ak-bHo"/>

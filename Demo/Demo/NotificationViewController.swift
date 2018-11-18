@@ -47,8 +47,7 @@ class KeyboardNotificationViewController: UIViewController {
         let curve = UIView.AnimationCurve(rawValue: (userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as! NSNumber).intValue)!
         let options = UIView.AnimationOptions(rawValue: UInt(curve.rawValue << 16))
         let duration = TimeInterval(truncating: userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as! NSNumber)
-        let distance = UIScreen.main.bounds.height - keyboardFrameEnd.origin.y
-        let bottom = distance >= bottomLayoutGuide.length ? distance : bottomLayoutGuide.length
+        let bottom = keyboardFrameEnd.height - bottomLayoutGuide.length
         
         UIView.animate(withDuration: duration, delay: 0.0, options: [options], animations:
             { () -> Void in
