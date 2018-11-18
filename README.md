@@ -39,19 +39,18 @@ override func viewWillDisappear(animated: Bool) {
     }
 }
 
-func keyboardEventNotified(notification: Notification) {
+@objc func keyboardEventNotified(notification: NSNotification) {
     guard let userInfo = notification.userInfo else { return }
-    let keyboardFrameEnd = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-    let curve = UIViewAnimationCurve(rawValue: (userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).integerValue)!
-    let options = UIViewAnimationOptions(rawValue: UInt(curve.rawValue << 16))
-    let duration = TimeInterval((userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue)
-    let distance = UIScreen.main.bounds.height - keyboardFrameEnd.origin.y
-    let bottom = distance >= bottomLayoutGuide.length ? distance : bottomLayoutGuide.length
-
-    UIView.animate(withDuration: event.duration, delay: 0.0, options: [event.options], animations:
-         { () -> Void in
-            self?.textView.contentInset.bottom = bottom
-            self?.textView.scrollIndicatorInsets.bottom = bottom
+    let keyboardFrameEnd = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+    let curve = UIView.AnimationCurve(rawValue: (userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as! NSNumber).intValue)!
+    let options = UIView.AnimationOptions(rawValue: UInt(curve.rawValue << 16))
+    let duration = TimeInterval(truncating: userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as! NSNumber)
+    let bottom = keyboardFrameEnd.height - bottomLayoutGuide.length
+    
+    UIView.animate(withDuration: duration, delay: 0.0, options: [options], animations:
+        { () -> Void in
+            self.textView.contentInset.bottom = bottom
+            self.textView.scrollIndicatorInsets.bottom = bottom
         } , completion: nil)
 }
 ```
@@ -65,17 +64,17 @@ override func viewDidLoad() {
     super.viewDidLoad()
 
     keyboard.observe { [weak self] (event) -> Void in
-        guard let s = self else { return }
+        guard let self = self else { return }
         switch event.type {
         case .willShow, .willHide, .willChangeFrame:
-            let distance = UIScreen.main.bounds.height - event.keyboardFrameEnd.origin.y
-            let bottom = distance >= s.bottomLayoutGuide.length ? distance : s.bottomLayoutGuide.length
-
-            UIView.animateWithDuration(event.duration, delay: 0.0, options: [event.options], animations:
-                { () -> Void in
-                    self?.textView.contentInset.bottom = bottom
-                    self?.textView.scrollIndicatorInsets.bottom = bottom
-                } , completion: nil)
+            print("Fire: \(event.type)")
+            let keyboardFrameEnd = event.keyboardFrameEnd
+            let bottom = keyboardFrameEnd.height - self.bottomLayoutGuide.length
+            
+            UIView.animate(withDuration: event.duration, delay: 0.0, options: [event.options], animations: { () -> Void in
+                self.textView.contentInset.bottom = bottom
+                self.textView.scrollIndicatorInsets.bottom = bottom
+                }, completion: nil)
         default:
             break
         }
@@ -125,7 +124,8 @@ It has also `public var notificationName: String` which you can get original not
 ## Runtime Requirements
 
 - iOS 8.0 or later
-- Xcode 9.0 - Swift4
+- Xcode 10.0 
+- Swift4.2
 
 ## Installation and Setup
 
@@ -154,7 +154,7 @@ To integrate KeyboardObserver into your Xcode project using CocoaPods, specify i
 ```bash
 platform :ios, '8.0'
 use_frameworks!
-pod "KeyboardObserver", '~>1.0.0'
+pod "KeyboardObserver", '~>2.0.0'
 ```
 
 ### Manual Installation

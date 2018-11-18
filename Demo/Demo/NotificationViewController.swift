@@ -12,10 +12,10 @@ class KeyboardNotificationViewController: UIViewController {
 
     @IBOutlet weak var textView: UITextView!
     
-    let keyboardNotifications: [NSNotification.Name] = [
-        .UIKeyboardWillShow,
-        .UIKeyboardWillHide,
-        .UIKeyboardWillChangeFrame
+    let keyboardNotifications = [
+        UIResponder.keyboardWillShowNotification,
+        UIResponder.keyboardWillHideNotification,
+        UIResponder.keyboardWillChangeFrameNotification
     ]
     
     override func viewDidLoad() {
@@ -41,14 +41,13 @@ class KeyboardNotificationViewController: UIViewController {
         }
     }
     
-    func keyboardEventNotified(notification: NSNotification) {
+    @objc func keyboardEventNotified(notification: NSNotification) {
         guard let userInfo = notification.userInfo else { return }
-        let keyboardFrameEnd = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        let curve = UIViewAnimationCurve(rawValue: (userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).intValue)!
-        let options = UIViewAnimationOptions(rawValue: UInt(curve.rawValue << 16))
-        let duration = TimeInterval(userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber)
-        let distance = UIScreen.main.bounds.height - keyboardFrameEnd.origin.y
-        let bottom = distance >= bottomLayoutGuide.length ? distance : bottomLayoutGuide.length
+        let keyboardFrameEnd = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let curve = UIView.AnimationCurve(rawValue: (userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as! NSNumber).intValue)!
+        let options = UIView.AnimationOptions(rawValue: UInt(curve.rawValue << 16))
+        let duration = TimeInterval(truncating: userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as! NSNumber)
+        let bottom = keyboardFrameEnd.height - bottomLayoutGuide.length
         
         UIView.animate(withDuration: duration, delay: 0.0, options: [options], animations:
             { () -> Void in
