@@ -38,7 +38,7 @@ final class KeyboardObserverViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.rightButtonDidTap))
     }
     
-    func rightButtonDidTap() {
+    @objc func rightButtonDidTap() {
         let message = keyboard.isEnabled ? "Disable keyboard observing?" : "Enable keyboard ovserving?"
         
         let controller = UIAlertController(title: "Keyboard observing", message: message, preferredStyle: .alert)
