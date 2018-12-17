@@ -153,7 +153,7 @@ To integrate KeyboardObserver into your Xcode project using CocoaPods, specify i
 ```bash
 platform :ios, '8.0'
 use_frameworks!
-pod "KeyboardObserver", '~>2.0.0'
+pod "KeyboardObserver", '~> 2.1'
 ```
 
 ### Manual Installation
